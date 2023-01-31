@@ -9,20 +9,21 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 
 // View Engine
-app.set("view engine", "ejs")
+app.set("view engine", "ejs");
 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(authRouter);
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(bodyParser.json());
 
 // Error middlewares
 app.use(errorHandler);
 app.use(notFound);
-
 
 const port = 3000;
 

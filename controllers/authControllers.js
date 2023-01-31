@@ -2,13 +2,19 @@ const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
 const CustomError = require("../middlewares/customErrorClass");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const errorHandler = (err) => {
   if (err.code === 11000) {
     throw new CustomError("This user has already signed up.", 11000);
   }
   throw new CustomError(err.message, StatusCodes.BAD_REQUEST);
+};
+
+const maxAge = 30 * 24 * 60 * 60 * 1000;
+
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
 const signup_GET = async (req, res) => {
@@ -35,7 +41,11 @@ const signup_POST = async (req, res, next) => {
   // const userObj = { ...req.body, password: hash }; // This object is then passed into the mongoose create function below
   try {
     const user = await User.create({ email, password });
-    res.status(StatusCodes.CREATED).json(user);
+    const token = await createToken(user._id);
+    res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge });
+    // res.status(StatusCodes.CREATED).json(user);
+    res.redirect("/signup");
+    console.log(user)
   } catch (error) {
     console.log(error);
     errorHandler(error);
