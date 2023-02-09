@@ -10,16 +10,29 @@ mongoose.set("strictQuery", true);
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const {
+  authenticator,
+  checkUser,
+} = require("./middlewares/authAndUserMiddleware");
 
 // View Engine
 app.set("view engine", "ejs");
 
 // Middlewares
+app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(authRouter);
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.get("*", checkUser);
+
+app.get("/", authenticator, (req, res) => {
+  res.render("home", { title: "Home" });
+});
+
+app.get("/main", authenticator, (req, res) => {
+  res.render("main", { title: "Main" });
+});
 
 // Error middlewares
 app.use(errorHandler);

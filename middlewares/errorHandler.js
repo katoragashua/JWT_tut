@@ -3,6 +3,7 @@ const CustomError = require("./customErrorClass");
 
 const notFound = (req, res, next) => {
   res.render("404", {title: "404"});
+  next()
 };
 
 const errorHandler = (error, req, res, next) => {
@@ -11,7 +12,7 @@ const errorHandler = (error, req, res, next) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ error: error.message, status: error.statusCode });
   }
-  res.statusCode(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
 };
 
 module.exports = {

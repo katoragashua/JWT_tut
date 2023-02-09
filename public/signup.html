@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <form action="" method="" class="signup">
+      <h2>Sign Up</h2>
+      <label for="email"
+        >Email: <input type="email" name="email" id="email"
+      /></label>
+      <div class="email-error"></div>
+      <label for="password"
+        >Password: <input type="password" name="password" id="password"
+      /></label>
+      <div class="password-error"></div>
+      <button type="submit">Signup</button>
+    </form>
+    <footer class="year">&copy; </footer>
+
+    <script>
+    const form = document.querySelector(".signup");
+    const emailError = document.querySelector(".email-error");
+    const passwordError = document.querySelector(".password-error");
+    document.querySelector(".year").textContent += `${new Date().getFullYear()} Banana Bandit`
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      emailError.textContent = "";
+      passwordError.textContent = "";
+
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+
+      try {
+        const res = await fetch("/signup", {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: { "Content-Type": "application/json" },
+        });
+        
+        const data = await res.json();
+        console.log(data);
+
+        if(data.user) {
+        location.assign("/")
+      }
+      } catch (err) {
+        console.log(err);
+      }
+
+      
+
+      form.reset();
+    });
+  </script>
+  </body>
+</html>

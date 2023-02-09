@@ -1,4 +1,8 @@
 <footer>
-    <small>&copy; Banana Bandit <%= new Date().getFullYear() %> </small>
-    
+  <small>&copy; Banana Bandit <%= new Date().getFullYear() %> </small>
+  <% if(user) { %>
+  <p>Welcome <%= user.email %>.</p>
+  <% } else { %>
+  <p>No user</p>
+  <% } %>
 </footer>

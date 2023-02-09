@@ -3,8 +3,8 @@
   <%- include("./partials/head.ejs") -%>
   <body>
     <%- include("./partials/header.ejs") -%>
-    <form action="" method="" class="signup">
-      <h2>Sign Up</h2>
+    <form action="" method="" class="signin">
+      <h2>Signin</h2>
       <label for="email"
         >Email: <input type="email" name="email" id="email"
       /></label>
@@ -13,11 +13,9 @@
         >Password: <input type="password" name="password" id="password"
       /></label>
       <div class="password-error"></div>
-      <button type="submit">Signup</button>
+      <button type="submit">Signin</button>
     </form>
-    <% const sentences = lorem.map(item => { %>
-    <p><%= item %></p>
-    <% })%> <% sentences.join("") %> <%- include("./partials/footer.ejs") -%>
+    <%- include("./partials/footer.ejs") -%>
 
     <script>
       const form = document.querySelector("form");
@@ -26,13 +24,12 @@
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        emailError.textContent = "";
-        passwordError.textContent = "";
+
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
         try {
-          const res = await fetch("/signup", {
+          const res = await fetch("/signin", {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: { "Content-Type": "application/json" },
@@ -45,10 +42,14 @@
             emailError.textContent = email;
             passwordError.textContent = password;
           }
+
+          if(data.user) {
+            location.assign("/")
+          }
         } catch (error) {
           console.log(error);
         }
-        form.reset();
+        form.reset()
       });
     </script>
   </body>
