@@ -27,7 +27,8 @@ app.use(cookieParser());
 app.get("*", checkUser);
 
 app.get("/", authenticator, (req, res) => {
-  res.render("home", { title: "Home" });
+  // console.log(req.user)
+  res.render("home", { title: "Home", user: req.user.username });
 });
 
 app.get("/main", authenticator, (req, res) => {

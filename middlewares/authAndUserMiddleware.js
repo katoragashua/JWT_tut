@@ -10,6 +10,7 @@ const authenticator = async (req, res, next) => {
         res.redirect("/signin");
       } else {
         console.log(decodedToken);
+        req.user = decodedToken
         next();
       }
     });

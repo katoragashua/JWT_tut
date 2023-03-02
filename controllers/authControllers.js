@@ -68,14 +68,13 @@ const errorHandlerFunction = (err) => {
       errors[properties.path] = properties.message;
     });
   }
-
   return errors;
 };
 
 const maxAge = 30 * 24 * 60 * 60 * 1000;
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+const createToken = (id, username) => {
+  return jwt.sign({ id, username }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
 const signup_GET = async (req, res) => {
@@ -103,7 +102,7 @@ const signup_POST = async (req, res, next) => {
   // const userObj = { ...req.body, password: hash }; // This object is then passed into the mongoose create function below
   try {
     const user = await User.create({ email, password });
-    const token = await createToken(user._id);
+    const token = await createToken(user._id, user.email);
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
     res.status(StatusCodes.CREATED).json(user);
     console.log(user);
@@ -116,7 +115,6 @@ const signup_POST = async (req, res, next) => {
 
 const login_POST = async (req, res) => {
   const { email, password } = req.body;
-  const userObj = { email: "", password: "" };
 
   try {
     const user = await User.findOne({ email });
@@ -128,7 +126,7 @@ const login_POST = async (req, res) => {
       throw new Error("Password is incorrect.");
     }
     console.log(user);
-    const token = await createToken(user._id);
+    const token = await createToken(user._id, user.email);
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
     res.status(StatusCodes.OK).json({ user });
   } catch (error) {
