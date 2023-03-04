@@ -7,14 +7,16 @@ const authenticator = async (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
         console.log(err.message);
+        req.user = null;
         res.redirect("/signin");
       } else {
         console.log(decodedToken);
-        req.user = decodedToken
+        req.user = decodedToken 
         next();
       }
     });
   } else {
+    req.user = null;
     res.redirect("/signin");
   }
 };

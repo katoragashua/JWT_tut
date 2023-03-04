@@ -28,11 +28,11 @@ app.get("*", checkUser);
 
 app.get("/", authenticator, (req, res) => {
   // console.log(req.user)
-  res.render("home", { title: "Home", user: req.user.username });
+  res.render("home", { title: "Home", user: req.user.username});
 });
 
 app.get("/main", authenticator, (req, res) => {
-  res.render("main", { title: "Main" });
+  res.render("main", { title: "Main",  user: req.user.username });
 });
 
 // Error middlewares
